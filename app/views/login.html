@@ -1,0 +1,29 @@
+<form ng-controller="LoginCtrl" ng-submit="submit()" data-abide>
+	<fieldset>
+		<legend>Login</legend>
+		<label class="name-field">
+			<label>Username:
+				<input id="username" type="text" ng-model="login.username" required pattern="[a-zA-Z0-9]+" placeholder="[Username]">
+			</label>
+			<small class="error">Name is required and must be a string.</small>
+		</label>
+		<label class="password">
+			<label>Password:
+				<input id="password" type="password" ng-model="login.password" required pattern="[a-zA-Z0-9]+" placeholder="[Password]">
+			</label>
+			<small class="error">Password is required and must be a string.</small>
+		</label>
+		<button class="botton radius" type="submit">Submit</button>
+		{{login.username}} - {{login.password}}
+		<br/>
+		{{userObject.name}}, 
+		{{userObject.last_access_date}}, 
+		{{userObject.last_access_media}},
+		{{userObject.image.icon}},
+		{{userObject.image.large}},
+		{{userObject.image.retina}},
+		{{userObject.image.thumbnail}}
+		<br/>
+		Token: {{token}}
+	</fieldset>
+</form>
