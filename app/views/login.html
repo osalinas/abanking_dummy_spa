@@ -1,29 +1,26 @@
-<form ng-controller="LoginCtrl" ng-submit="submit()" data-abide>
-	<fieldset>
-		<legend>Login</legend>
-		<label class="name-field">
-			<label>Username:
-				<input id="username" type="text" ng-model="login.username" required pattern="[a-zA-Z0-9]+" placeholder="[Username]">
+<div class="row small-centered medium-4" >
+	<form ng-controller="LoginCtrl" id="loginForm" data-abide>
+		<fieldset>
+			<legend>Login</legend>
+			<div data-alert class="alert-box round" ng-class="loginAlertBox.class" ng-show="loginAlertBox.display">
+				{{loginAlertBox.message}}
+				<a class="fi-x" ng-click="loginAlertBox.close()">&nbsp;</a>
+			</div>
+			<label class="username-field">
+				<label>Username:
+					<input id="username" type="text" ng-model="login.username" required pattern="[a-zA-Z0-9]{5,10}" placeholder="[Username]" class="radius"/>
+				</label>
+				<small class="error">Username is required and must be a string from 5 to 10 characters.</small>
 			</label>
-			<small class="error">Name is required and must be a string.</small>
-		</label>
-		<label class="password">
-			<label>Password:
-				<input id="password" type="password" ng-model="login.password" required pattern="[a-zA-Z0-9]+" placeholder="[Password]">
+			<label class="password-field">
+				<label>Password:
+					<input id="password" type="password" ng-model="login.password" required pattern="[a-zA-Z0-9]{5,10}" placeholder="[Password]" class="radius"/>
+				</label>
+				<small class="error">Password is required and must be a string from 5 to 10 characters.</small>
 			</label>
-			<small class="error">Password is required and must be a string.</small>
-		</label>
-		<button class="botton radius" type="submit">Submit</button>
-		{{login.username}} - {{login.password}}
-		<br/>
-		{{userObject.name}}, 
-		{{userObject.last_access_date}}, 
-		{{userObject.last_access_media}},
-		{{userObject.image.icon}},
-		{{userObject.image.large}},
-		{{userObject.image.retina}},
-		{{userObject.image.thumbnail}}
-		<br/>
-		Token: {{token}}
-	</fieldset>
-</form>
+			<div class="small-centered columns medium-4">
+				<button class="radius" type="submit">Submit</button>
+			</div>
+		</fieldset>
+	</form>
+</div>

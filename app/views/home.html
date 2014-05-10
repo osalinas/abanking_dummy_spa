@@ -1,32 +1,30 @@
-<!-- Header and Nav -->
+<div ng-controller="HomeCtrl">
+  <!-- Header and Nav -->
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <!-- Title Area -->
       <li class="name">
         <h1>
-          <a href="/home">
-            Home
-          </a>
+          <a>Home</a>
         </h1>
       </li>
       <li class="toggle-topbar menu-icon"><a><span>Menu</span></a></li>
     </ul>
 
     <section class="top-bar-section">
-      <!-- Left Nav Section -->
-
-
       <!-- Right Nav Section -->
       <ul class="right">
         <li class="divider"></li>
         <li class="has-dropdown">
           <a>Menu</a>
           <ul class="dropdown">
-            <li><a>Usuarios</a></li>
+            <li><a>Users</a></li>
             <li class="divider"></li>
-            <li><a>Dispositivos</a></li>
+            <li><a>Devices</a></li>
             <li class="divider"></li>
-            <li><a>Sesiones</a></li>
+            <li><a>Sessions</a></li>
+            <li class="divider"></li>
+            <li><a ng-click="logout()">Log out</a></li>
           </ul>
         </li>
       </ul>
@@ -38,108 +36,121 @@
 
   <!-- Main Grid Section -->
   <div class="row">
-      <div class="large-3 columns"><h4 class="subheader">Image</h4></div>
-      <div class="large-3 columns"><h4 class="subheader">Name</h4></div>
-      <div class="large-3 columns"><h4 class="subheader">Create date</h4></div>
-      <div class="large-1 columns"><button class="fi-plus" data-reveal-id="myModal"></button></div>
-      <!-- Feed Entry -->
-      <div infinite-scroll='nextPage()' infinite-scroll-disabled='busy' infinite-scroll-distance='10'>
-        <div class="row" ng-repeat="user in users">
-          <div class="large-3 columns">
-            <img ng-if="user.image == null" src="http://placehold.it/80x80&text=[Image]"/>
-            <img ng-if="user.image != null" src="http://placehold.it/80x80&text=[User {{user.image.icon}}]" />
-          </div>
-          <div class="large-3 columns inline">
-            {{user.last_name}}, {{user.first_name}}
-          </div>
-          <div class="large-3 columns inline">
-            {{user.created_at | date}}
-          </div>
-          <div class="large-1 columns">
-            <ul class="inline-list">
-              <li><a class="fi-page-edit" ng-click="edit($index)"/></li>
-              <li><a class="fi-x" ng-click="delete($index)"/></li>
-            </ul>
-          </div>
-          <hr/>
+
+    <div data-alert class="alert-box round row" ng-class="listAlertBox.class" ng-show="listAlertBox.display">
+      {{listAlertBox.message}}
+      <a class="fi-x" ng-click="listAlertBox.close()">&nbsp;</a>
+    </div>
+
+    <div class="large-3 columns">
+      <h5 class="subheader">Image</h5>
+    </div>
+    <div class="large-3 columns text-center">
+      <h5 class="subheader">Name</h5>
+    </div>
+    <div class="large-4 columns text-center">
+      <h5 class="subheader">&nbsp; Create date</h5>
+    </div>
+    <div class="large-1 columns">
+      <a data-reveal-id="myModal">&nbsp;&nbsp;<i class="fi-plus large subheader"></i>
+      </a>
+    </div>
+    <!-- Feed Entry -->
+    <div infinite-scroll="nextPage()" infinite-scroll-disabled="stop" infinite-scroll-distance="10">
+      <div class="row" ng-repeat="user in users">
+        <div class="large-3 columns">
+          <img ng-if="user.image === null" src="http://placehold.it/80x80&text=[Image]"/>
+          <img ng-if="user.image !== null" src="http://placehold.it/80x80&text=[User {{user.image.icon}}]" />
         </div>
-        <div ng-show='busy'>Loading data...</div>
+        <div class="large-3 columns  text-center">
+          {{user.last_name}}, {{user.first_name}}
+        </div>
+        <div class="large-4 columns text-center">
+          {{user.created_at | date}}
+        </div>
+        <div class="large-1 columns ">
+          <ul class="inline-list">
+            <!--<li><a class="fi-page-edit" ng-click="edit($index)"/></li>-->
+            <li>
+              <a class="fi-x" ng-click="delete($index)"> </a>
+            </li>
+          </ul>
+        </div>
+        <hr/>
       </div>
-      
-      <!-- End Feed Entry -->
+      <div ng-show="busy">Loading data...</div>
+    </div>
+
+    <!-- End Feed Entry -->
   </div>
+
   <div id="myModal" class="reveal-modal" data-reveal>
-    <h2>Awesome. I have it.</h2>
-    <p class="lead">Your couch.  It is mine.</p>
-    <p>Im a cool paragraph that lives inside of an even cooler modal. Wins</p>
     <a class="close-reveal-modal">&#215;</a>
-    <label>User ID:</label><p>{{user.user_id}}</p>
-    <form id="newUserForm" data-abide>
+    <h2>Adding a user</h2>
+    <div data-alert class="alert-box alert round" ng-show="addAlertBox.display">
+      {{addAlertBox.message}}
+      <a class="fi-x" ng-click="addAlertBox.close()">&nbsp;</a>
+    </div>
+    <form id="addUserForm" data-abide="ajax">
       <div class="row">
         <div class="large-5 columns">
           <label>First name:
-            <input type="text" ng-model="newUser.firstName" required pattern="[a-zA-Z]+">
+            <input type="text" name="users_name" ng-model="newUser.firstName" required pattern="[a-zA-Z]{3,10}">
           </label>
-          <small class="error">Name is required and must be a string from 5 to 10 characteres.</small>
+          <small class="error">Name is required and must be a string from 3 to 10 characters.</small>
         </div>
         <div class="large-5 columns">
           <label>Last name:
-            <input type="text" ng-model="newUser.lastName" required pattern="[a-zA-Z]+">
+            <input type="text" ng-model="newUser.lastName" required pattern="[a-zA-Z]{3,10}">
           </label>
-          <small class="error">Lastname is required and must be a string.</small>
+          <small class="error">Lastname is required and must be a string from 3 to 10 characters.</small>
         </div>
       </div>
       <div class="row">
         <div class="large-5 columns">
           <label>Username:
-            <input type="text" ng-model="newUser.username" required pattern="alpha_numeric">
+            <input type="text" ng-model="newUser.username" required pattern="[a-zA-Z0-9]{5,10}">
           </label>
-          <small class="error">Name is required and must be a string.</small>
+          <small class="error">Username is required and must be a string from 5 to 10 characters.</small>
         </div>
         <div class="large-5 columns">
           <div class="row">
             <label>Password:
-              <input type="password" ng-model="newUser.password" id="password" required pattern="[a-zA-Z]+">
+              <input type="password" ng-model="newUser.password" id="password" required pattern="[a-zA-Z0-9]{5,10}">
             </label>
-            <small class="error">Name is required and must be a string.</small>
+            <small class="error">Password is required and must be a string from 5 to 10 characters.</small>
           </div>
           <div class="row">
-            <label>Password:
-              <input type="password" required pattern="[a-zA-Z]+" data-equalto="password">
+            <label>Confirm Password:
+              <input type="password" required pattern="[a-zA-Z0-9]{5,10}" data-equalto="password">
             </label>
-            <small class="error">Name is required and must be a string.</small>
+            <small class="error">Repeat password is required and must be a string from 5 to 10.</small>
           </div>
         </div>
       </div>
       <div class="row" >
-        <div class="small-1 small-centered columns">
-          <button class="botton radius" type="submit">Add</button>
+        <div class="small-3 small-centered columns">
+          <button type="submit" class="radius">Add</button>
+          &nbsp;
+          <button type="reset" class="radius">Clean</button>
         </div>
       </div>
     </form>
-
   </div>
   <!-- End Grid Section -->
+</div>
 
 
+<!-- Footer -->
 
-  <!-- Footer -->
-
-  <footer class="row">
-    <div class="large-12 columns">
-      <hr />
-      <div class="row">
-        <div class="large-6 columns">
-          <p>&copy; Copyright no one at all. Go to town.</p>
-        </div>
-        <div class="large-6 columns">
-          <ul class="inline-list right">
-            <li><a href="#">Section 1</a></li>
-            <li><a href="#">Section 2</a></li>
-            <li><a href="#">Section 3</a></li>
-            <li><a href="#">Section 4</a></li>
-          </ul>
-        </div>
+<footer class="row">
+  <div class="large-12 columns">
+    <hr />
+    <div class="row">
+      <div class="large-6 columns">
+        <p>&copy; Copyright Anzen.</p>
       </div>
+      <div class="large-6 columns"></div>
     </div>
-  </footer>
+  </div>
+</footer>

@@ -1,29 +1,32 @@
 'use strict';
 
 angular.module('abankingDummySpaApp')
-.controller('LoginCtrl', function ($scope, $localStorage, $location, Restangular) {
+  .controller('LoginCtrl', function ($scope, $location, Restangular, FndtnAlertBoxDriver, authTokenService) {
 
-	$scope.$watch('$viewContentLoaded', function()
-        {
-            $(document).foundation();
-        });
+	$scope.loginAlertBox = new FndtnAlertBoxDriver();
 
-
-	if(typeof($localStorage.xAuthToken) == 'undefined'){
+	if(authTokenService.exits()){
 		$location.path('home');
 	}
-	$scope.token = $localStorage.xAuthToken;
+
+	$scope.$watch('$viewContentLoaded', function () {
+		$(document).foundation();
+	});
+
+
+	$('#loginForm').on('valid', function () {
+      $scope.submit();
+    });
+
 	$scope.submit = function(){
 		Restangular.all('login')
 		.post($scope.login)
 		.then(
 			function (postedUser) {
 				$scope.userObject = postedUser.data;
-				$localStorage.xAuthToken = postedUser.headers('X-AUTH-TOKEN');
 				$location.path('home');
 			},function (response){
-				console.log("ERROR Response =");
-				console.log(response);
+				$scope.loginAlertBox.error(response.data);
 			});
 	};
 });
