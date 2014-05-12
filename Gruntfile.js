@@ -284,7 +284,7 @@ module.exports = function (grunt) {
         },{
           expand: true,
           cwd: '<%= yeoman.app %>/bower_components/foundation-icon-fonts',
-          dest: '<%= yeoman.dist %>/bower_components/foundation-icon-fonts',
+          dest: '<%= yeoman.dist %>/styles',
           src: ['{,*/}*.{eot,svg,ttf,woff}']
         }]
       },
