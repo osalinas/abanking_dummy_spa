@@ -54,8 +54,7 @@ angular
     Restangular.setErrorInterceptor(
       function (response, deferred) {
         if(response.status===403){
-          authTokenService.setToken(null);
-          $location.path('login');
+          authTokenService.removeToken();
         }
       });
     Restangular.addFullRequestInterceptor(
@@ -78,7 +77,7 @@ angular
     };
 
     this.removeToken = function () {
-      $localStorage.xAuthToken = null;
+      delete $localStorage.xAuthToken;
       $location.path('login');
     };
 
@@ -87,7 +86,7 @@ angular
     };
 
     this.exits = function () {
-      return (typeof(this.getToken()) === 'undefined');
+      return (this.getToken() !== undefined);
     };
 
   });

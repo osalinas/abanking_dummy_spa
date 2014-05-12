@@ -68,7 +68,15 @@ angular.module('abankingDummySpaApp')
     };
 
     $scope.logout = function () {
-      authTokenService.removeToken();
+      Restangular
+      .one('logout')
+      .get()
+      .then(
+        function (success) {
+          authTokenService.removeToken()
+        }, function (error) {
+          $scope.listAlertBox.error('Error in logout service. Wait some minutes and attempt login again.');
+        });
     };
 
   });
